@@ -1,5 +1,6 @@
 const { FusesPlugin } = require('@electron-forge/plugin-fuses');
 const { FuseV1Options, FuseVersion } = require('@electron/fuses');
+const path = require('path'); // Import the path module
 
 module.exports = {
   packagerConfig: {
@@ -36,7 +37,7 @@ module.exports = {
     {
       name: '@electron-forge/maker-dmg',
       config: {
-        background: path.resolve(__dirname, './assets/dmg.png'), // your uploaded background
+        background: path.resolve(__dirname, './assets/dmg.png'), // Use path module
         iconSize: 100,
         format: 'ULFO', // optional, but standard
         contents: [
@@ -60,8 +61,6 @@ module.exports = {
       name: '@electron-forge/plugin-auto-unpack-natives',
       config: {},
     },
-    // Fuses are used to enable/disable various Electron functionality
-    // at package time, before code signing the application
     new FusesPlugin({
       version: FuseVersion.V1,
       [FuseV1Options.RunAsNode]: false,
