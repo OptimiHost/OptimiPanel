@@ -45,6 +45,7 @@ module.exports = {
             x: 290,
             y: 480,
             type: 'file', // Your app
+            path: path.resolve(__dirname, './out/OptimiPanel-darwin-arm64/OptimiPanel.app') // Correct path to the app
           },
           {
             x: 790,
