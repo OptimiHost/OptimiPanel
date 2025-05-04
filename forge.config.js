@@ -36,12 +36,24 @@ module.exports = {
     {
       name: '@electron-forge/maker-dmg',
       config: {
-        background: './assets/dmg.png',
-        format: 'ULFO',
-        icon: "./assets/file.svg"
-      }
+        background: path.resolve(__dirname, './assets/dmg.png'), // your uploaded background
+        iconSize: 100,
+        format: 'ULFO', // optional, but standard
+        contents: [
+          {
+            x: 290,
+            y: 480,
+            type: 'file', // Your app
+          },
+          {
+            x: 790,
+            y: 480,
+            type: 'link',
+            path: '/Applications', // App shortcut
+          }
+        ]
+      },
     }
-
   ],
   plugins: [
     {

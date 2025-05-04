@@ -9,8 +9,9 @@ jobs:
   build:
     strategy:
       matrix:
-        platform: [win32, darwin, linux]
-    runs-on: ${{ matrix.platform }}
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        arch: [x64, arm64]
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout code
@@ -19,10 +20,31 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
 
       - name: Install dependencies
         run: npm install
 
-      - name: Build for ${{ matrix.platform }}
-        run: npm run make -- --platform=${{ matrix.platform }}
+      - name: Set Electron Platform
+        run: |
+          if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
+            echo "ELECTRON_PLATFORM=linux" >> $GITHUB_ENV
+          elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            echo "ELECTRON_PLATFORM=win32" >> $GITHUB_ENV
+          elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
+            echo "ELECTRON_PLATFORM=darwin" >> $GITHUB_ENV
+          fi
+        shell: bash
+
+      - name: Set Electron Arch
+        run: |
+          echo "ELECTRON_ARCH=${{ matrix.arch }}" >> $GITHUB_ENV
+
+      - name: Build Electron App
+        run: npm run make -- --platform=$ELECTRON_PLATFORM --arch=$ELECTRON_ARCH
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.os }}-${{ matrix.arch }}-build
+          path: out/make/
